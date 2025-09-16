@@ -1,0 +1,57 @@
+@use "../fonts/index";
+@use "includes/ui";
+
+:root {
+  --text-color: linear-gradient(0deg, #FF0000, #FF0000),
+  linear-gradient(0deg, #0B1739, #0B1739);
+  --accent-color: #3EB57C;
+  font-family: 'PTRootUIWebRegular', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  line-height: 1.6;
+  color: var(--text-color);
+  min-height: 100vh;
+  font-size: 14px;
+}
+.container {
+  padding: 96px 80px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 80px;
+
+  @media (max-width: 768px) {
+    padding: 0 0.5rem;
+  }
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 2rem;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.pc {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+.mobile {
+  display: none;
+  @media (max-width: 768px) {
+    display: initial;
+  }
+}
+
+
