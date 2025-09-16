@@ -69,7 +69,9 @@ export const useApartmentStore = defineStore('apartments', () => {
       .sort((a, b) => a - b)
 
     filter.value.priceRange = [sortedByPrice[0], sortedByPrice.at(-1)]
-    filter.value.areaRange = [sortedByArea[0], sortedByArea.at(-1)]
+    filter.value.areaRange = [Math.round(sortedByArea[0]), Math.round(sortedByArea.at(-1))]
+    filter.value.rooms = [...new Set(apartmentList.map(el => el.rooms))]
+    console.log(filter.value.rooms)
   }
 
   function applyFilters() {
@@ -114,6 +116,9 @@ export const useApartmentStore = defineStore('apartments', () => {
     applyFilters,
     loadMore,
     updateFilter,
-    paginatedApartments
+    paginatedApartments,
+    loading,
+    hasMore,
+    filter
   }
 })

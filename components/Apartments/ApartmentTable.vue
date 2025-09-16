@@ -1,7 +1,6 @@
 <template>
   <div class="apartment-table">
     <h1 class="page-title">Квартиры</h1>
-    <span>{{loading}}</span>
     <div class="table-responsive">
       <table class="table">
         <thead>

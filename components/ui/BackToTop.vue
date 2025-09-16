@@ -5,9 +5,10 @@
     @click="scrollToTop"
     aria-label="Вернуться наверх"
   >
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg width="10" height="15" viewBox="0 0 10 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4.99998 14.0032L4.99998 2.00319M4.99998 2.00319L9.00061 6.00319M4.99998 2.00319L0.99935 6.00319" stroke="white" stroke-width="2" stroke-linecap="round"/>
     </svg>
+
   </button>
 </template>
 
@@ -42,7 +43,7 @@ onUnmounted(() => {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #007bff;
+  background: var(--main-bg-color);
   color: white;
   border: none;
   cursor: pointer;

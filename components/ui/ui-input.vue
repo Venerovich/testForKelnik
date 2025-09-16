@@ -1,20 +1,35 @@
 <script setup lang="ts">
-const modelValue = defineModel({default: 0})
+const modelValue = defineModel({default: '0'})
 defineProps({
   prefix: {
     type: String,
     default: 'от'
   }
 })
+const handleInput = (e: HTMLInputElement) => {
+  let value = e.target.value.replace(/[^\d]/g, '');
+
+  value = value.replace(/^0+/, '');
+
+  if (value.length > 0) {
+    const numValue = parseInt(value, 10);
+    if (numValue > 1000000000) {
+      value = value.slice(0, -1);
+    }
+  }
+  else value = 1
+  modelValue.value = value
+}
 </script>
 <template>
   <div>
     <span class="prefix">{{ prefix }}</span>
     <input
+      v-model="modelValue"
       type="text"
       class="filter-input"
       v-bind="$attrs"
-      v-model="modelValue"
+      @input="handleInput"
     >
   </div>
 </template>

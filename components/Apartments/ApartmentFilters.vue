@@ -4,8 +4,9 @@
     <div class="filter-params">
       <div class="btn--group">
         <button class="btn btn--round"
-                v-for="room in rooms"
+                v-for="room in roomList"
                 :class="{'active': activeRoom === room.value}"
+                :disabled="!rooms.includes(room.value)"
                 @click="activeRoom = room.value"
                 :key="room.value">{{ room.label }}</button>
       </div>
@@ -14,28 +15,53 @@
         <label class="filter-label">Стоимость квартиры, ₽</label>
 
         <div class="range-inputs">
-          <ui-input class="input-group"
-                    v-model="priceMin"
+          <ui-input
+            v-model="filters.priceRange[0]"
+            type="number"
+            max="1000"
+            class="input-group"
           />
-          <ui-input class="input-group"
-                    prefix="до"
-                    v-model="priceMax"
+          <ui-input
+            v-model="filters.priceRange[1]"
+            type="number"
+            class="input-group"
+            prefix="до"
           />
         </div>
 
-        <ui-range v-model:max="priceMax"
-                  v-model:min="priceMin"
+        <ui-range
+          v-model:max="filters.priceRange[1]"
+          v-model:min="filters.priceRange[0]"
+          step="10000"
+          rangeMin="1"
+          rangeMax="30000000"
         />
       </div>
 
       <div class="filter-group">
         <label class="filter-label">Площадь, м²</label>
         <div class="range-inputs">
-          <ui-input class="input-group" v-model="areaMin"/>
-          <ui-input class="input-group" prefix="до" v-model="areaMax"/>
+
+          <ui-input
+            v-model="filters.areaRange[0]"
+            type="number"
+            class="input-group"
+          />
+
+          <ui-input
+            v-model="filters.areaRange[1]"
+            type="number"
+            class="input-group"
+            prefix="до"
+          />
         </div>
-        <ui-range v-model:max="areaMax"
-                  v-model:min="areaMin"/>
+        <ui-range
+          v-model:max="filters.areaRange[1]"
+          v-model:min="filters.areaRange[0]"
+          step="1"
+          rangeMin="1"
+          rangeMax="200"
+        />
       </div>
 
       <button class="btn btn--reset" @click="resetFilters">
@@ -49,37 +75,35 @@
 </template>
 
 <script setup>
-import UiRange from "@/components/ui/ui-range.vue";
-import CloseIcon from "@/components/icons/close-icon.vue";
-import UiInput from "@/components/ui/ui-input.vue";
+import UiInput from "~/components/ui/ui-input.vue";
+import CloseIcon from "~/components/icons/close-icon.vue";
+import UiRange from "~/components/ui/ui-range.vue";
 
-const priceMin = ref(5500000)
-const priceMax = ref(18900000)
+const filters = defineModel('filter')
+defineProps({
+  rooms: {
+    type: Array,
+    default: () => []
+  }
+})
+
 const activeRoom = ref(null)
-const areaMin = ref('')
-const areaMax = ref('')
 
-const rooms = [
+const roomList = [
   {label: '1к', value: 1},
   {label: '2к', value: 2},
   {label: '3к', value: 3},
   {label: '4к', value: 4},
 ]
 
-const resetFilters = () => {
-  priceMin.value = 5500000
-  priceMax.value = 18900000
-  areaMin.value = ''
-  areaMax.value = ''
-  activeRoom.value = null
-}
+const resetFilters = () => {}
 </script>
 
 <style lang="scss" scoped>
 .apartment-filter {
   max-width: 400px;
   padding: 24px;
-  background: linear-gradient(135deg, rgba(174, 228, 178, 0.3) 0%, rgba(149, 208, 161, 0.3) 100%);
+  background: var(--main-bg-color);
   border-radius: 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   max-height: 370px;

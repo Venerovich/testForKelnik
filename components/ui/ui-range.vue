@@ -1,34 +1,54 @@
 <script setup>
-const minValue = defineModel('min')
-const maxValue = defineModel('max')
+
+const min = defineModel('min', {default: 1})
+const max = defineModel('max', {default: 10})
+
+const props = defineProps({
+  rangeMin: {
+    type: String,
+    default: '1',
+  },
+  rangeMax: {
+    type: String,
+    default: '1',
+  },
+})
 
 const updateSlider = (value, type) => {
-  if (Number(minValue.value) > Number(maxValue.value)) {
-    minValue.value = value - 10000
-    maxValue.value = value
-  } else type === 'min' ? minValue.value = value : maxValue.value = value
+  if (Number(min.value) > Number(max.value)) {
+    min.value = value - 1
+    max.value = value
+  }
+  else type === 'min' ? min.value = value : max.value = value
 }
+
+const styles = computed(() => {
+  return {
+    left: `${(min.value - Number(props.rangeMin)) / (Number(props.rangeMax) - Number(props.rangeMin)) * 100}%`,
+    right: `${(100 - (max.value - Number(props.rangeMin)) / (Number(props.rangeMax) - Number(props.rangeMin)) * 100)}%`
+  }
+})
 
 </script>
 <template>
   <div class="slider-container">
-    <div class="slider-track"/>
+    <div class="slider-track" :style="styles"/>
     <input
+      v-model="min"
       type="range"
-      min="5500000"
-      max="18900000"
-      step="100000"
-      :value="minValue"
+      :min="rangeMin"
+      :max="rangeMax"
+      step="1"
       v-bind="$attrs"
       class="slider slider-min"
       @input="updateSlider($event.target.value, 'min')"
     >
     <input
+      v-model="max"
       type="range"
-      min="5500000"
-      max="18900000"
-      step="100000"
-      :value="maxValue"
+      :min="rangeMin"
+      :max="rangeMax"
+      step="1"
       v-bind="$attrs"
       class="slider slider-max"
       @input="updateSlider($event.target.value, 'max')"
@@ -50,8 +70,6 @@ const updateSlider = (value, type) => {
   height: 100%;
   background-color: #3EB57C;
   border-radius: 2px;
-  left: calc((v-bind(min) - 5500000) / (18900000 - 5500000) * 100%);
-  right: calc(100% - (v-bind(max) - 5500000) / (18900000 - 5500000) * 100%);
 }
 
 .slider {

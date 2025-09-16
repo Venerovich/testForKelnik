@@ -7,7 +7,8 @@
                     :loading="loading"
                     @loadMore="loadMore"/>
     <ApartmentFilters
-      :filters="filters"
+      v-model:filter="filters"
+      :rooms="rooms"
       @update-filters="handleFiltersUpdate"
       @reset-filters="resetFilters"
     />
@@ -24,15 +25,24 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
 
 const resetFilters = () => {}
 const handleFiltersUpdate = () => {}
-const filters = ref({})
+
+const filters = ref({
+  priceRange: [0, 100000000] as [number, number],
+  rooms: [] as number[],
+  areaRange: [0, 500] as [number, number],
+})
+
 const store = useApartmentStore()
 
 const paginatedApartments = computed(() => store.paginatedApartments)
 const loading = computed(() => store.loading)
 const hasMore = computed(() => store.hasMore)
+const rooms = computed(() => store.filter?.rooms ?? [])
 
-onMounted(() => {
-  store.fetchApartments()
+onMounted(async () => {
+  await store.fetchApartments()
+  Object.assign(filters.value, store.filter)
+  console.log(filters.value)
 })
 const loadMore = () => {store.loadMore()}
 </script>
