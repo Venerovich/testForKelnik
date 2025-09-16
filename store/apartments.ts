@@ -32,10 +32,17 @@ export const useApartmentStore = defineStore('apartments', () => {
     areaRange: [0, 500] as [number, number],
   } as FilterState,)
 
+  const baseFilter = ref({
+    priceRange: [0, 100000000] as [number, number],
+    rooms: [] as number[],
+    areaRange: [0, 500] as [number, number],
+  } as FilterState,)
+
   const loading = ref(true)
   const page = ref(1)
   const itemsPerPage = 10
   const hasMore = ref(true)
+  const sort = ref('desc')
 
   // <====================computed====================>
 
@@ -51,7 +58,7 @@ export const useApartmentStore = defineStore('apartments', () => {
       await new Promise(resolve => setTimeout(resolve, 1000))
       apartments.value = apartmentList
       initFilterParams()
-      applyFilters()
+      applyFilters(null)
     } catch (error) {
       throw error
     } finally {
@@ -65,26 +72,43 @@ export const useApartmentStore = defineStore('apartments', () => {
       .sort((a, b) => a - b)
 
     const sortedByArea = apartmentList
-      .map(el => el.area)
+      .map(el => Math.round(el.area))
       .sort((a, b) => a - b)
 
     filter.value.priceRange = [sortedByPrice[0], sortedByPrice.at(-1)]
-    filter.value.areaRange = [Math.round(sortedByArea[0]), Math.round(sortedByArea.at(-1))]
-    filter.value.rooms = [...new Set(apartmentList.map(el => el.rooms))]
-    console.log(filter.value.rooms)
+    filter.value.areaRange = [sortedByArea[0], sortedByArea.at(-1)]
+    baseFilter.value = {...filter.value}
   }
 
-  function applyFilters() {
+  function sortBy(type: string) {
+    if (sort.value === 'desc') {
+      sort.value = 'asc'
+      apartments.value = apartmentList.sort((a, b) => a[type] - b[type])
+    }
+    else {
+      sort.value = 'desc'
+      apartments.value = apartmentList.sort((a, b) => b[type] - a[type])
+    }
+    applyFilters(null)
+  }
+  function resetFilters () {
+    filter.value = {...baseFilter.value}
+    applyFilters(null)
+  }
+  function applyFilters(changedFilters: null) {
+    let innerFilter = filter.value
+    if (changedFilters) innerFilter = changedFilters
+
     filteredApartments.value = apartments.value.filter(apartment => {
 
-      const inPriceRange = apartment.price >= filter.value.priceRange[0] &&
-        apartment.price <= filter.value.priceRange[1]
+      const inPriceRange = apartment.price >= innerFilter.priceRange[0] &&
+        apartment.price <= innerFilter.priceRange[1]
 
-      const inRoomFilter = filter.value.rooms.length === 0 ||
-        filter.value.rooms.includes(apartment.rooms)
+      const inRoomFilter = innerFilter.rooms.length === 0 ||
+        innerFilter.rooms.includes(apartment.rooms)
 
-      const inAreaRange = apartment.area >= filter.value.areaRange[0] &&
-        apartment.area <= filter.value.areaRange[1]
+      const inAreaRange = apartment.area >= innerFilter.areaRange[0] &&
+        apartment.area <= innerFilter.areaRange[1]
 
       return inPriceRange && inRoomFilter && inAreaRange
     })
@@ -108,13 +132,15 @@ export const useApartmentStore = defineStore('apartments', () => {
 
   function updateFilter(newFilter: Partial<FilterState>) {
     filter.value = {...filter.value, ...newFilter}
-    applyFilters()
+    applyFilters(null)
   }
 
   return {
     fetchApartments,
-    applyFilters,
+    sortBy,
     loadMore,
+    resetFilters,
+    applyFilters,
     updateFilter,
     paginatedApartments,
     loading,

@@ -5,23 +5,34 @@
       <table class="table">
         <thead>
         <tr>
-          <th> Планировка </th>
+          <th> Планировка</th>
           <th>Квартира</th>
           <th>
-            <div class="header-item">S, м² <SortIcon/></div>
+            <button class="btn header-item" @click="$emit('sortBy', 'area')">
+              S, м²
+              <SortIcon/>
+            </button>
           </th>
           <th>
-            <div class="header-item">Этаж <SortIcon/> </div>
+            <button class="btn header-item" @click="$emit('sortBy', 'currentFloor')">
+              Этаж
+              <SortIcon/>
+            </button>
           </th>
           <th>
-            <div class="header-item">Цена, ₽ <SortIcon/> </div>
+            <button class="btn header-item" @click="$emit('sortBy', 'price')">
+              Цена, ₽
+              <SortIcon/>
+            </button>
           </th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="apartment in apartments" :key="apartment.id" class="apartment-row">
           <td>
-            <div class="layout-placeholder"></div>
+            <div class="layout-placeholder">
+              <img src="~/assets/images/apartment-img.png" alt="apartment">
+            </div>
           </td>
           <td>
             <strong>{{ apartment.type }} {{ apartment.number }}</strong>
@@ -29,7 +40,7 @@
           <td>{{ apartment.area }}</td>
           <td>
             {{ apartment.currentFloor }}
-            <span style="opacity: 0.5">{{`из ${apartment.totalFloor}`}}</span>
+            <span style="opacity: 0.5">{{ `из ${apartment.totalFloor}` }}</span>
           </td>
           <td>
             <span class="price">{{ apartment.priceFormatted }}</span>
@@ -80,7 +91,12 @@ defineProps<Props>()
 .header-item {
   display: flex;
   gap: 8px;
+  font-weight: 600;
   align-items: center;
+
+  &:hover {
+    color: var(--accent-color);
+  }
 }
 
 .load-more-btn {

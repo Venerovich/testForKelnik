@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {defineEmits} from "@vue/runtime-core";
+
 const modelValue = defineModel({default: '0'})
 defineProps({
   prefix: {
@@ -6,6 +8,7 @@ defineProps({
     default: 'от'
   }
 })
+const emit = defineEmits(['input'])
 const handleInput = (e: HTMLInputElement) => {
   let value = e.target.value.replace(/[^\d]/g, '');
 
@@ -19,6 +22,7 @@ const handleInput = (e: HTMLInputElement) => {
   }
   else value = 1
   modelValue.value = value
+  emit('input')
 }
 </script>
 <template>

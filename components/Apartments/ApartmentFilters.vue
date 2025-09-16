@@ -1,14 +1,60 @@
+<script setup lang="ts">
+import UiInput from "~/components/ui/ui-input.vue";
+import CloseIcon from "~/components/icons/close-icon.vue";
+import {ElSlider} from "element-plus"
+import 'element-plus/dist/index.css'
+
+const filters = defineModel('filter')
+defineProps({
+  rooms: {
+    type: Array,
+    default: () => []
+  }
+})
+const emit = defineEmits(['update-filters', 'reset-filters'])
+
+const roomList = [
+  {label: '1к', value: 1},
+  {label: '2к', value: 2},
+  {label: '3к', value: 3},
+  {label: '4к', value: 4},
+]
+
+const filterBy = (value: number) => {
+  if (value) {
+    if (filters.value.rooms.includes(value)) {
+      filters.value.rooms = filters.value.rooms.filter((el: number) => el !== value)
+    }
+    else filters.value.rooms.push(value)
+  }
+  console.log('update')
+  emit('update-filters')
+}
+
+const debounceTimer = ref(null)
+
+function debounce(fn: () => void, delay: number) {
+  return (...args) => {
+    clearTimeout(debounceTimer.value);
+    debounceTimer.value = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
+
+const debouncedFilter = debounce(filterBy, 300)
+
+</script>
 <template>
   <div class="apartment-filter">
-
     <div class="filter-params">
       <div class="btn--group">
         <button class="btn btn--round"
                 v-for="room in roomList"
-                :class="{'active': activeRoom === room.value}"
-                :disabled="!rooms.includes(room.value)"
-                @click="activeRoom = room.value"
-                :key="room.value">{{ room.label }}</button>
+                :key="room.value"
+                :class="{'active': filters.rooms.includes(room.value)}"
+                @click="filterBy(room.value)"
+                >{{ room.label }}</button>
       </div>
 
       <div class="filter-group">
@@ -20,22 +66,17 @@
             type="number"
             max="1000"
             class="input-group"
+            @input="debouncedFilter(null)"
           />
           <ui-input
             v-model="filters.priceRange[1]"
             type="number"
             class="input-group"
             prefix="до"
+            @input="debouncedFilter(null)"
           />
         </div>
-
-        <ui-range
-          v-model:max="filters.priceRange[1]"
-          v-model:min="filters.priceRange[0]"
-          step="10000"
-          rangeMin="1"
-          rangeMax="30000000"
-        />
+        <el-slider v-model="filters.priceRange" range :max="99999999" @input="debouncedFilter(null)"/>
       </div>
 
       <div class="filter-group">
@@ -46,6 +87,7 @@
             v-model="filters.areaRange[0]"
             type="number"
             class="input-group"
+            @input="debouncedFilter(null)"
           />
 
           <ui-input
@@ -53,18 +95,13 @@
             type="number"
             class="input-group"
             prefix="до"
+            @input="debouncedFilter(null)"
           />
         </div>
-        <ui-range
-          v-model:max="filters.areaRange[1]"
-          v-model:min="filters.areaRange[0]"
-          step="1"
-          rangeMin="1"
-          rangeMax="200"
-        />
+        <el-slider v-model="filters.areaRange" range :max="400" @input="debouncedFilter(null)"/>
       </div>
 
-      <button class="btn btn--reset" @click="resetFilters">
+      <button class="btn btn--reset" @click="emit('reset-filters')">
         Сбросить параметры
         <close-icon/>
       </button>
@@ -74,32 +111,16 @@
   </div>
 </template>
 
-<script setup>
-import UiInput from "~/components/ui/ui-input.vue";
-import CloseIcon from "~/components/icons/close-icon.vue";
-import UiRange from "~/components/ui/ui-range.vue";
-
-const filters = defineModel('filter')
-defineProps({
-  rooms: {
-    type: Array,
-    default: () => []
-  }
-})
-
-const activeRoom = ref(null)
-
-const roomList = [
-  {label: '1к', value: 1},
-  {label: '2к', value: 2},
-  {label: '3к', value: 3},
-  {label: '4к', value: 4},
-]
-
-const resetFilters = () => {}
-</script>
-
-<style lang="scss" scoped>
+<style lang="scss">
+.el-slider__bar {
+  background-color: var(--accent-color) !important;
+}
+.el-slider__button {
+  background-color: var(--accent-color) !important;
+  border: none;
+  width: 14px !important;
+  height: 14px !important;
+}
 .apartment-filter {
   max-width: 400px;
   padding: 24px;
