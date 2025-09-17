@@ -1,0 +1,112 @@
+<template>
+  <div class="filters-skeleton">
+    <div class="skeleton-heading" style="width: 120px"></div>
+    <div class="skeleton-options">
+      <div class="skeleton-option" v-for="i in 4" :key="i"></div>
+    </div>
+
+    <div class="skeleton-heading" style="width: 150px"></div>
+    <div class="skeleton-range">
+      <div class="skeleton-range-inputs">
+        <div class="skeleton-input"></div>
+        <div class="skeleton-input"></div>
+      </div>
+      <div class="skeleton-range-slider"></div>
+    </div>
+
+    <div class="skeleton-heading" style="width: 100px"></div>
+    <div class="skeleton-range">
+      <div class="skeleton-range-inputs">
+        <div class="skeleton-input"></div>
+        <div class="skeleton-input"></div>
+      </div>
+      <div class="skeleton-range-slider"></div>
+    </div>
+
+    <div class="skeleton-button"></div>
+  </div>
+</template>
+
+<script setup>
+</script>
+
+<style scoped>
+.filters-skeleton {
+  padding: 24px;
+  background: var(--main-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  min-width: 380px;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.skeleton-heading {
+  height: 18px;
+  background: linear-gradient(90deg, #f5f5f5 25%, #e8e8e8 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  animation: skeleton-loading 1.8s ease-in-out infinite;
+}
+
+.skeleton-options {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.skeleton-option {
+  width: 48px;
+  height: 24px;
+  background: linear-gradient(90deg, #f5f5f5 25%, #e8e8e8 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  border-radius: 16px;
+  animation: skeleton-loading 1.8s ease-in-out infinite;
+}
+
+.skeleton-range {
+  margin-bottom: 24px;
+}
+
+.skeleton-range-inputs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skeleton-input {
+  flex: 1;
+  height: 38px;
+  background: linear-gradient(90deg, #f5f5f5 25%, #e8e8e8 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: skeleton-loading 1.8s ease-in-out infinite;
+}
+
+.skeleton-range-slider {
+  height: 6px;
+  background: linear-gradient(90deg, #f5f5f5 25%, #e8e8e8 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  border-radius: 3px;
+  animation: skeleton-loading 1.8s ease-in-out infinite;
+}
+
+.skeleton-button {
+  height: 42px;
+  background: linear-gradient(90deg, #f5f5f5 25%, #e8e8e8 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: skeleton-loading 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+</style>

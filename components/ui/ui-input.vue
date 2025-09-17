@@ -14,13 +14,6 @@ const handleInput = (e: HTMLInputElement) => {
 
   value = value.replace(/^0+/, '');
 
-  if (value.length > 0) {
-    const numValue = parseInt(value, 10);
-    if (numValue > 1000000000) {
-      value = value.slice(0, -1);
-    }
-  }
-  else value = 1
   modelValue.value = value
   emit('input')
 }

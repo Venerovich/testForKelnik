@@ -7,7 +7,7 @@
   --accent-color: #3EB57C;
   font-family: 'PTRootUIWebRegular', sans-serif;
   --main-bg-color: linear-gradient(135deg, rgba(174, 228, 178, 0.3) 0%, rgba(149, 208, 161, 0.3) 100%);
-
+  --border-color: #0000001A;
 }
 
 * {
@@ -22,6 +22,7 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   font-size: 14px;
+  max-width: 1440px;
 }
 .container {
   padding: 96px 80px;
@@ -29,8 +30,13 @@ body {
   display: flex;
   gap: 80px;
 
-  @media (max-width: 768px) {
-    padding: 0 0.5rem;
+  @media (max-width: 960px) {
+    padding: 48px 54px;
+    gap: 28px;
+  }
+  @media (max-width: 540px) {
+    padding: 24px 16px;
+    gap: 28px;
   }
 }
 
@@ -46,14 +52,14 @@ body {
 }
 
 .pc {
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     display: none;
   }
 }
 .mobile {
-  display: none;
-  @media (max-width: 768px) {
-    display: initial;
+  display: none !important;
+  @media (max-width: 960px) {
+    display: flex !important;
   }
 }
 input::-webkit-outer-spin-button,

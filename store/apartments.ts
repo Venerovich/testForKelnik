@@ -1,17 +1,15 @@
 import apartmentList from "@/store/moc/apartments"
 
-export interface Apartment {
-  id: number
-  title: string
-  address: string
-  price: number
-  area: number
-  rooms: number
-  floor: number
-  maxFloor: number
-  images: string[],
+interface Apartment {
+  id: number,
+  type: string,
+  rooms: number,
+  number: string,
+  area: number,
+  price: number,
+  priceFormatted: string,
   currentFloor: number,
-  totalFloor: number,
+  totalFloor: number
 }
 
 export interface FilterState {
@@ -23,8 +21,8 @@ export interface FilterState {
 export const useApartmentStore = defineStore('apartments', () => {
 
   // <====================states====================>
-  const apartments = ref([]) as Apartment[]
-  const filteredApartments = ref([]) as Apartment[]
+  const apartments = ref<Apartment[]>([]);
+  const filteredApartments = ref<Apartment[]>([]);
 
   const filter = ref({
     priceRange: [0, 100000000] as [number, number],
@@ -40,9 +38,12 @@ export const useApartmentStore = defineStore('apartments', () => {
 
   const loading = ref(true)
   const page = ref(1)
-  const itemsPerPage = 10
+  const itemsPerPage = 20
   const hasMore = ref(true)
-  const sort = ref('desc')
+  const sort = ref({
+    name: '',
+    type: 'des'
+  })
 
   // <====================computed====================>
 
@@ -52,13 +53,19 @@ export const useApartmentStore = defineStore('apartments', () => {
   })
 
   // <====================handlers====================>
-  async function fetchApartments() {
-    loading.value = true
+  async function fetchApartments(queryParams: FilterState) {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      loading.value = true
+      await new Promise(resolve => setTimeout(resolve, 300))
       apartments.value = apartmentList
-      initFilterParams()
-      applyFilters(null)
+
+      if (queryParams && Object.keys(queryParams).length) {
+        await updateFilter(queryParams)
+      }
+      else {
+        initFilterParams()
+        applyFilters(null)
+      }
     } catch (error) {
       throw error
     } finally {
@@ -66,7 +73,7 @@ export const useApartmentStore = defineStore('apartments', () => {
     }
   }
 
-  function initFilterParams () {
+  function initFilterParams() {
     const sortedByPrice = apartmentList
       .map(el => el.price)
       .sort((a, b) => a - b)
@@ -77,29 +84,43 @@ export const useApartmentStore = defineStore('apartments', () => {
 
     filter.value.priceRange = [sortedByPrice[0], sortedByPrice.at(-1)]
     filter.value.areaRange = [sortedByArea[0], sortedByArea.at(-1)]
-    baseFilter.value = {...filter.value}
+
+    baseFilter.value.priceRange = [sortedByPrice[0], sortedByPrice.at(-1)]
+    baseFilter.value.areaRange = [sortedByArea[0], sortedByArea.at(-1)]
+  }
+  type NumericKeys<T> = {
+    [K in keyof T]: T[K] extends number ? K : never;
+  }[keyof T];
+
+  async function sortBy<K extends NumericKeys<Apartment>>(name: K) {
+    try {
+      loading.value = true
+      await new Promise(resolve => setTimeout(resolve, 300))
+      sort.value.name = name
+      if (sort.value.type === 'desc') {
+        sort.value.type = 'asc'
+        apartments.value = apartmentList.sort((a, b) => a[name] - b[name])
+      } else {
+        sort.value.type = 'desc'
+        apartments.value = apartmentList.sort((a, b) => b[name] - a[name])
+      }
+      applyFilters(null)
+    } catch (error) {
+      throw error
+    } finally {
+      loading.value = false
+    }
   }
 
-  function sortBy(type: string) {
-    if (sort.value === 'desc') {
-      sort.value = 'asc'
-      apartments.value = apartmentList.sort((a, b) => a[type] - b[type])
-    }
-    else {
-      sort.value = 'desc'
-      apartments.value = apartmentList.sort((a, b) => b[type] - a[type])
-    }
-    applyFilters(null)
-  }
-  function resetFilters () {
-    filter.value = {...baseFilter.value}
-    applyFilters(null)
-  }
+  // async function resetFilters() {
+  //   await updateFilter(baseFilter.value)
+  // }
+
   function applyFilters(changedFilters: null) {
     let innerFilter = filter.value
     if (changedFilters) innerFilter = changedFilters
 
-    filteredApartments.value = apartments.value.filter(apartment => {
+    filteredApartments.value = apartments.value.filter((apartment: Apartment) => {
 
       const inPriceRange = apartment.price >= innerFilter.priceRange[0] &&
         apartment.price <= innerFilter.priceRange[1]
@@ -120,7 +141,7 @@ export const useApartmentStore = defineStore('apartments', () => {
   async function loadMore() {
     try {
       loading.value = true
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 300))
       page.value += 1
       hasMore.value = page.value * itemsPerPage < filteredApartments.value.length
     } catch (error) {
@@ -130,21 +151,29 @@ export const useApartmentStore = defineStore('apartments', () => {
     }
   }
 
-  function updateFilter(newFilter: Partial<FilterState>) {
-    filter.value = {...filter.value, ...newFilter}
-    applyFilters(null)
+  async function updateFilter(newFilter: Partial<FilterState>) {
+    try {
+      loading.value = true
+      await new Promise(resolve => setTimeout(resolve, 300))
+      filter.value = {...filter.value, ...newFilter}
+      applyFilters(null)
+    } catch (error) {
+      throw error
+    } finally {
+      loading.value = false
+    }
   }
 
   return {
     fetchApartments,
     sortBy,
     loadMore,
-    resetFilters,
-    applyFilters,
     updateFilter,
     paginatedApartments,
     loading,
     hasMore,
-    filter
+    filter,
+    baseFilter,
+    sort
   }
 })

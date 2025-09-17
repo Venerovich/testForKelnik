@@ -1,28 +1,63 @@
+<script setup lang="ts">
+import SortIcon from "@/components/icons/SortIcon.vue";
+import ApartmentCard from "@/components/Apartments/ApartmentCard.vue";
+import ApartmentFilters from "@/components/Apartments/ApartmentFilters.vue";
+import ApartmentTableSkeleton from "@/components/Apartments/ApartmentTableSkeleton.vue";
+
+interface Apartment {
+  id: number
+  type: string
+  number: string
+  area: number
+  floor: string
+  price: number
+  priceFormatted: string
+}
+
+interface Props {
+  apartments: Apartment[],
+  loading: boolean,
+  hasMore: boolean,
+  sort: {
+    name: string,
+    type: string
+  },
+}
+
+defineProps<Props>()
+
+const filters = defineModel('filter')
+const emit = defineEmits(['loadMore', 'sortBy', 'update-filters', 'reset-filters'])
+
+const isMounted = ref(false)
+const sortActions = [
+  {name: 'S, м²', sortName: 'area'},
+  {name: 'Этаж', sortName: 'currentFloor'},
+  {name: 'Цена, ₽', sortName: 'price'},
+]
+
+setTimeout(() => {
+  isMounted.value = true
+})
+</script>
 <template>
-  <div class="apartment-table">
+  <ApartmentTableSkeleton v-if="!isMounted"/>
+  <div v-else class="apartment-table">
     <h1 class="page-title">Квартиры</h1>
-    <div class="table-responsive">
+    <div class="table-responsive pc">
+
       <table class="table">
         <thead>
         <tr>
           <th> Планировка</th>
           <th>Квартира</th>
-          <th>
-            <button class="btn header-item" @click="$emit('sortBy', 'area')">
-              S, м²
-              <SortIcon/>
-            </button>
-          </th>
-          <th>
-            <button class="btn header-item" @click="$emit('sortBy', 'currentFloor')">
-              Этаж
-              <SortIcon/>
-            </button>
-          </th>
-          <th>
-            <button class="btn header-item" @click="$emit('sortBy', 'price')">
-              Цена, ₽
-              <SortIcon/>
+          <th v-for="(el, i) in sortActions" :key="i">
+            <button
+              class="btn header-item"
+              :class="{'sort-active': sort.name && el.sortName.includes(sort.name)}"
+              @click="emit('sortBy', el.sortName)">
+                {{ el.name }}
+              <SortIcon :sort="sort" :itemName="el.sortName"/>
             </button>
           </th>
         </tr>
@@ -50,42 +85,62 @@
       </table>
     </div>
 
+    <ApartmentFilters
+      class="portable-filter"
+      v-model:filter="filters"
+      @update-filters="emit('update-filters')"
+      @reset-filters="emit('reset-filters')"
+    />
+
+    <div class="apartment-cards mobile">
+      <div class="sort-actions">
+        <button
+          v-for="(el, i) in sortActions" :key="i"
+          class="btn header-item"
+          :class="{'active': el.sortName.includes(sort.name)}"
+          @click="emit('sortBy', el.sortName)">
+          {{ el.name }}
+          <SortIcon/>
+        </button>
+      </div>
+
+      <ApartmentCard
+        v-for="apartment in apartments"
+        :key="apartment.id"
+        :apartment="apartment">
+      </ApartmentCard>
+    </div>
+
     <div v-if="!apartments.length && !loading" class="no-results">
       <p>Квартиры по выбранным параметрам не найдены</p>
     </div>
 
-    <button v-if="hasMore" class="load-more-btn" @click="$emit('loadMore')">
+    <button v-if="hasMore" class="btn btn--secondary" @click="emit('loadMore')">
       Загрузить еще
     </button>
   </div>
 </template>
 
-<script setup lang="ts">
-import SortIcon from "@/components/icons/SortIcon.vue";
-
-interface Apartment {
-  id: number
-  type: string
-  number: string
-  area: number
-  floor: string
-  price: number
-  priceFormatted: string
-}
-
-interface Props {
-  apartments: Apartment[],
-  loading: Boolean,
-  hasMore: Boolean
-}
-
-defineProps<Props>()
-
-</script>
-
 <style scoped lang="scss">
 .apartment-table {
-  width: calc(100% - 500px);
+  width: 100%;
+
+  @media (max-width: 960px) {}
+}
+
+.portable-filter {
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+    max-width: initial;
+    margin-bottom: 24px;
+  }
+}
+.apartment-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .header-item {
@@ -97,26 +152,15 @@ defineProps<Props>()
   &:hover {
     color: var(--accent-color);
   }
-}
-
-.load-more-btn {
-  display: block;
-  margin-top: 2rem;
-  padding: 12px 24px;
-  background-color: transparent;
-  border: 1px solid #0B173933;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  width: auto;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: var(--accent-color);
-    color: white;
+  &.sort-active {
+    color: var(--accent-color) !important;
   }
 }
-
+.sort-actions {
+  display: flex;
+  gap: 16px;
+  padding-left: 4px;
+}
 .table {
   width: 100%;
   border-collapse: collapse;
