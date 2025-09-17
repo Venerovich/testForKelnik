@@ -1,0 +1,50 @@
+.btn
+  border: none
+  background-color: transparent
+  cursor: pointer
+  transition: all .3s ease-in-out
+  font-family: "PTRootUIWebRegular", sans-serif
+  white-space: nowrap
+
+  &--group
+    display: flex
+    gap: 16px
+    font-size: 16px
+
+  &--secondary
+    display: block
+    margin-top: 2rem
+    padding: 12px 24px
+    background-color: transparent
+    border: 1px solid #0B173933
+    border-radius: 25px
+    font-size: 1rem
+    cursor: pointer
+    width: auto
+    transition: all 0.3s ease-in-out
+
+    &:hover
+      background-color: var(--accent-color)
+      color: white
+
+  &--round
+    background-color: white
+    border-radius: 50%
+    padding: 10px
+    font-size: 16px
+    width: 44px
+    aspect-ratio: 1/1
+
+    &.active
+      background-color: var(--accent-color)
+      color: white
+      box-shadow: 0 6px 20px 0 #95D0A1
+
+  &--reset
+    display: flex
+    gap: 8px
+    align-items: center
+    padding: 8px
+
+    &:hover
+      color: coral

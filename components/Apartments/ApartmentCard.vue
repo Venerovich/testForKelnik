@@ -1,3 +1,23 @@
+<script setup lang="ts">
+
+interface Apartment {
+  id: number,
+  type: string,
+  rooms: number,
+  number: string,
+  area: number,
+  price: number,
+  priceFormatted: string,
+  currentFloor: number,
+  totalFloor: number
+}
+interface Props {
+  apartment: Apartment
+}
+
+defineProps<Props>()
+
+</script>
 <template>
   <article class="apartment-card">
 
@@ -22,52 +42,25 @@
   </article>
 </template>
 
-<script setup lang="ts">
+<style lang="sass" scoped>
+.apartment-card
+  display: flex
+  align-items: center
+  justify-content: space-between
+  border: 1px solid var(--border-color)
+  border-radius: 8px
+  padding: 16px 24px
+  //min-width: 400px
+  min-width: 290px
+  width: 100%
 
-interface Apartment {
-  id: number,
-  type: string,
-  rooms: number,
-  number: string,
-  area: number,
-  price: number,
-  priceFormatted: string,
-  currentFloor: number,
-  totalFloor: number
-}
-interface Props {
-  apartment: Apartment
-}
+  &__content
+    display: flex
+    flex-direction: column
+    gap: 16px
 
-defineProps<Props>()
-
-</script>
-
-<style lang="scss" scoped>
-.apartment-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px 24px;
-  //min-width: 400px;
-  min-width: 290px;
-  width: 100%;
-
-  @media (max-width: 768px) {
-
-  }
-
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  &__details {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-}
+  &__details
+    display: flex
+    gap: 20px
+    flex-wrap: wrap
 </style>

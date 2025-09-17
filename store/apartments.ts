@@ -12,11 +12,15 @@ interface Apartment {
   totalFloor: number
 }
 
-export interface FilterState {
+interface FilterState {
   priceRange: [number, number]
   rooms: number[]
   areaRange: [number, number]
 }
+
+type NumericKeys<T> = {
+  [K in keyof T]: T[K] extends number ? K : never;
+}[keyof T];
 
 export const useApartmentStore = defineStore('apartments', () => {
 
@@ -63,7 +67,6 @@ export const useApartmentStore = defineStore('apartments', () => {
         await updateFilter(queryParams)
       }
       else {
-        initFilterParams()
         applyFilters(null)
       }
     } catch (error) {
@@ -72,25 +75,6 @@ export const useApartmentStore = defineStore('apartments', () => {
       loading.value = false
     }
   }
-
-  function initFilterParams() {
-    const sortedByPrice = apartmentList
-      .map(el => el.price)
-      .sort((a, b) => a - b)
-
-    const sortedByArea = apartmentList
-      .map(el => Math.round(el.area))
-      .sort((a, b) => a - b)
-
-    filter.value.priceRange = [sortedByPrice[0], sortedByPrice.at(-1)]
-    filter.value.areaRange = [sortedByArea[0], sortedByArea.at(-1)]
-
-    baseFilter.value.priceRange = [sortedByPrice[0], sortedByPrice.at(-1)]
-    baseFilter.value.areaRange = [sortedByArea[0], sortedByArea.at(-1)]
-  }
-  type NumericKeys<T> = {
-    [K in keyof T]: T[K] extends number ? K : never;
-  }[keyof T];
 
   async function sortBy<K extends NumericKeys<Apartment>>(name: K) {
     try {
@@ -111,10 +95,6 @@ export const useApartmentStore = defineStore('apartments', () => {
       loading.value = false
     }
   }
-
-  // async function resetFilters() {
-  //   await updateFilter(baseFilter.value)
-  // }
 
   function applyFilters(changedFilters: null) {
     let innerFilter = filter.value
