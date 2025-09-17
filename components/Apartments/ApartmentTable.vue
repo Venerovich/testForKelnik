@@ -39,6 +39,7 @@ const sortActions = [
 setTimeout(() => {
   isMounted.value = true
 })
+
 </script>
 <template>
   <ApartmentTableSkeleton v-if="!isMounted"/>

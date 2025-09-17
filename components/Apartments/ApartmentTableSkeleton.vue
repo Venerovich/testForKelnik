@@ -52,5 +52,5 @@
 <script setup></script>
 
 <style scoped lang="sass">
-@use "assets/css/includes/apartment-skeleton"
+@use "assets/css/includes/apartment-table-skeleton"
 </style>

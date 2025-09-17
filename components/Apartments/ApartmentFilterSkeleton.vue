@@ -1,33 +1,41 @@
 <template>
-  <div class="filters-skeleton">
-    <div class="skeleton-heading" style="width: 120px"></div>
-    <div class="skeleton-options">
-      <div class="skeleton-option" v-for="i in 4" :key="i"></div>
-    </div>
+  <div style="display: flex; flex-direction: column; width: 100%">
+    <div class="skeleton-title"/>
 
-    <div class="skeleton-heading" style="width: 150px"></div>
-    <div class="skeleton-range">
-      <div class="skeleton-range-inputs">
-        <div class="skeleton-input"></div>
-        <div class="skeleton-input"></div>
+    <div class="filters-skeleton">
+      <div class="skeleton-heading" style="width: 120px"></div>
+      <div class="skeleton-options">
+        <div class="skeleton-option" v-for="i in 4" :key="i"></div>
       </div>
-      <div class="skeleton-range-slider"></div>
-    </div>
 
-    <div class="skeleton-heading" style="width: 100px"></div>
-    <div class="skeleton-range">
-      <div class="skeleton-range-inputs">
-        <div class="skeleton-input"></div>
-        <div class="skeleton-input"></div>
+      <div class="skeleton-heading" style="width: 150px"></div>
+      <div class="skeleton-range">
+        <div class="skeleton-range-inputs">
+          <div class="skeleton-input"></div>
+          <div class="skeleton-input"></div>
+        </div>
+        <div class="skeleton-range-slider"></div>
       </div>
-      <div class="skeleton-range-slider"></div>
+
+      <div class="skeleton-heading" style="width: 100px"></div>
+      <div class="skeleton-range">
+        <div class="skeleton-range-inputs">
+          <div class="skeleton-input"></div>
+          <div class="skeleton-input"></div>
+        </div>
+        <div class="skeleton-range-slider"></div>
+      </div>
+
+      <div class="skeleton-button"></div>
     </div>
 
-    <div class="skeleton-button"></div>
+    <ApartmentCardSkeleton class="mobile"/>
   </div>
+
 </template>
 
 <script setup>
+import ApartmentCardSkeleton from "./ApartmentCardSkeleton.vue";
 </script>
 
 <style scoped lang="sass">
