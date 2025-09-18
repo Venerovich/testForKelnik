@@ -1,5 +1,3 @@
-import apartmentList from "@/store/moc/apartments"
-
 interface Apartment {
   id: number,
   type: string,
@@ -34,12 +32,6 @@ export const useApartmentStore = defineStore('apartments', () => {
     areaRange: [0, 500] as [number, number],
   } as FilterState,)
 
-  const baseFilter = ref({
-    priceRange: [0, 100000000] as [number, number],
-    rooms: [] as number[],
-    areaRange: [0, 500] as [number, number],
-  } as FilterState,)
-
   const loading = ref(true)
   const page = ref(1)
   const itemsPerPage = 20
@@ -60,8 +52,8 @@ export const useApartmentStore = defineStore('apartments', () => {
   async function fetchApartments(queryParams: FilterState) {
     try {
       loading.value = true
-      await new Promise(resolve => setTimeout(resolve, 300))
-      apartments.value = apartmentList
+      const { data } = await useFetch('/api/apartments')
+      apartments.value = data.value.data
 
       if (queryParams && Object.keys(queryParams).length) {
         await updateFilter(queryParams)
@@ -83,10 +75,12 @@ export const useApartmentStore = defineStore('apartments', () => {
       sort.value.name = name
       if (sort.value.type === 'desc') {
         sort.value.type = 'asc'
-        apartments.value = apartmentList.sort((a, b) => a[name] - b[name])
+        apartments.value = apartments.value
+          .sort((a: Apartment, b: Apartment) => a[name] - b[name])
       } else {
         sort.value.type = 'desc'
-        apartments.value = apartmentList.sort((a, b) => b[name] - a[name])
+        apartments.value = apartments.value
+          .sort((a: Apartment, b: Apartment) => b[name] - a[name])
       }
       applyFilters(null)
     } catch (error) {
@@ -153,7 +147,6 @@ export const useApartmentStore = defineStore('apartments', () => {
     loading,
     hasMore,
     filter,
-    baseFilter,
     sort
   }
 })

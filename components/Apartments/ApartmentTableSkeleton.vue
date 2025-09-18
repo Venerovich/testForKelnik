@@ -1,5 +1,5 @@
 <template>
-  <div class="apartments-skeleton">
+  <div class="apartments-skeleton" style="width: 100%; flex-grow: 1">
 
     <div class="skeleton-title"></div>
 

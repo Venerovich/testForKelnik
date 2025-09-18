@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SortIcon from "@/components/icons/SortIcon.vue";
+import SortIcon from "@/components/icons/sort-icon.vue";
 import ApartmentCard from "@/components/Apartments/ApartmentCard.vue";
 import ApartmentFilters from "@/components/Apartments/ApartmentFilters.vue";
 import ApartmentTableSkeleton from "@/components/Apartments/ApartmentTableSkeleton.vue";
@@ -98,10 +98,10 @@ setTimeout(() => {
         <button
           v-for="(el, i) in sortActions" :key="i"
           class="btn header-item"
-          :class="{'active': el.sortName.includes(sort.name)}"
+          :class="{'sort-active': sort.name && el.sortName.includes(sort.name)}"
           @click="emit('sortBy', el.sortName)">
           {{ el.name }}
-          <SortIcon/>
+          <SortIcon :sort="sort" :itemName="el.sortName"/>
         </button>
       </div>
 

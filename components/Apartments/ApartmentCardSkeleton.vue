@@ -1,17 +1,15 @@
 <template>
   <div class="mobile-apartments-skeleton">
-    <!-- Заголовок сортировки -->
+
     <div class="skeleton-sort-header">
       <div class="skeleton-sort-item" v-for="i in 3" :key="i"></div>
     </div>
 
-    <!-- Карточки квартир -->
     <div class="skeleton-cards">
       <div class="skeleton-card" v-for="i in 5" :key="i">
-        <!-- Заголовок квартиры -->
+
         <div class="skeleton-card-title"></div>
 
-        <!-- Детали -->
         <div class="skeleton-card-details">
           <div class="skeleton-detail" style="width: 60px"></div>
           <div class="skeleton-detail" style="width: 80px"></div>

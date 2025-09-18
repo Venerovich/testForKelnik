@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; width: 100%">
+  <div class="filters-skeleton--wrapper">
     <div class="skeleton-title"/>
 
     <div class="filters-skeleton">

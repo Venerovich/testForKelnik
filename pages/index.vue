@@ -5,6 +5,15 @@ import {useApartmentStore} from "@/store/apartments";
 import BackToTop from "@/components/ui/BackToTop.vue";
 import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
 
+interface RouteQueryResult {
+  [key: string]: number[];
+}
+interface FilterState {
+  priceRange: [number, number]
+  rooms: number[]
+  areaRange: [number, number]
+}
+
 const router = useRouter()
 const route = useRoute()
 const store = useApartmentStore()
@@ -13,13 +22,14 @@ const {
   hasMore,
   loading,
   filter,
-  baseFilter,
   sort,
 } = storeToRefs(store)
 
-interface RouteQueryResult {
-  [key: string]: number[];
-}
+const baseFilter = ref({
+  priceRange: [0, 100000000] as [number, number],
+  rooms: [] as number[],
+  areaRange: [0, 500] as [number, number],
+} as FilterState,)
 
 const checkRouteQuery = (): RouteQueryResult => {
   const routeQuery = route.query;
