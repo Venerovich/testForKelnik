@@ -1,12 +1,19 @@
-# Nuxt Minimal Starter
-
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install dependencies:
+Структура проекта
+├── .nuxt/          # Автогенерируемые файлы
+├── node_modules/   # Установленные зависимости
+├── assets/         # Статические ресурсы (CSS, изображения, шрифты)
+├── components/     # Vue компоненты
+├── pages/          # Страницы приложения
+├── public/         # Публичные статические файлы
+├── server/         # Серверная логика и API
+├── app.vue         # Главный компонент приложения
+├── nuxt.config.ts  # Конфигурационный файл Nuxt
+├── package.json    # Файл зависимостей
+├── tsconfig.json   # Конфигурация TypeScript
+└── README.md       # Описание проекта
 
 ```bash
+
 # npm
 npm install
 
@@ -16,60 +23,6 @@ pnpm install
 # yarn
 yarn install
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
